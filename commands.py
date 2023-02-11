@@ -3,7 +3,7 @@ import subprocess
 
 def action(apple_script):
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate(script.encode('utf-8'))
+    stdout, stderr = p.communicate(apple_script.encode('utf-8'))
 
     if p.returncode != 0:
         raise Exception(stderr)
