@@ -1,7 +1,31 @@
 import subprocess
 
+from langchain.agents import tool
 
-def action(apple_script):
+@tool
+def computer_action(apple_script):
+    """
+    Use this when you want to execute a command on the computer. The command should be in AppleScript.
+
+    Here are some examples of good AppleScript commands:
+
+    Command: Create a new page in Notion
+    AppleScript: tell application "Notion"
+        activate
+        delay 0.5
+        tell application "System Events" to keystroke "n" using {{command down}}
+    end tell
+
+    Command: Search for a table nearby
+    AppleScript: tell application "Google Chrome"
+    activate
+    open location "https://www.google.com/search?q=Table+nearby"
+    end tell
+
+    The AppleScript should be valid and when appropriate use keyboard shortcuts.
+
+    Write the AppleScript for the Command:
+    """
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate(apple_script.encode('utf-8'))
 

@@ -15,7 +15,7 @@ load_dotenv()
 
 def main(command):
     # First, let's load the language model we're going to use to control the agent.
-    llm = OpenAI(temperature=0.9)
+    llm = OpenAI(temperature=0)
 
     prompt = f"""
     I want you to generate the AppleScript to execute a command.
