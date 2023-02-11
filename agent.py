@@ -4,17 +4,22 @@ from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 
-from commands import chrome_javascript_action, chrome_os_action
+from commands import computer_action, chrome_open_url, get_url_compose_gmail, chrome_action
 
 load_dotenv()
 
-llm = OpenAI(temperature=0)
+llm = OpenAI(temperature=0.1)
 
 tools = load_tools([], llm=llm)
 
-tools.append(chrome_os_action)
-tools.append(chrome_javascript_action)
+tools.append(computer_action)
+tools.append(chrome_open_url)
+tools.append(get_url_compose_gmail)
+tools.append(chrome_action)
 
-agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
+agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True,max_iterations=10)
 
-agent.run("Find me a good restaurant nearby")
+#agent.run("Search for a table nearby")
+#agent.run("Open outlook, wait a second and create a new email")
+agent.run("Create a new email to tim_beans@hotmail.com in Chrome")
+#agent.run("go to bbc.com and, once there, execute the javascript to print 'haha' in chrome")
