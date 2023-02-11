@@ -1,0 +1,17 @@
+Write the applescript to option the Notion application
+
+tell application "Notion"
+	activate
+end tell
+
+---
+
+Command: Search for a table nearby
+
+tell application "Google Chrome"
+  activate
+  open location "https://www.google.com/search?q=Table+nearby"
+end tell
+
+---
+
