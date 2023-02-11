@@ -7,6 +7,8 @@ def computer_action(apple_script):
     """
     Use this when you want to execute a command on the computer. The command should be in AppleScript.
 
+    Always start with starting the app and activating it.
+
     Here are some examples of good AppleScript commands:
 
     Command: Create a new page in Notion

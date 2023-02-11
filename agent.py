@@ -18,3 +18,6 @@ tools = [
 agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
 
 agent.run("What is 5 x 5?")
+# agent.run("Play a game of chess")
+# agent.run("Find me a table nearby")
+
