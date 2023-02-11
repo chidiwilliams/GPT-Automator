@@ -3,9 +3,11 @@ import subprocess
 from langchain.agents import tool
 
 @tool
-def computer_action(apple_script):
+def chrome_os_action(apple_script):
     """
-    Use this when you want to execute a command on the computer. The command should be in AppleScript.
+    Use this when you want to control the computer. The command should be in AppleScript.
+
+    It is good for opening Chrome and interacting with other apps, but not for interacting with the Chrome itself.
 
     Here are some examples of good AppleScript commands:
 
@@ -26,6 +28,7 @@ def computer_action(apple_script):
 
     Write the AppleScript for the Command:
     """
+    print("Running AppleScript: ", apple_script)
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate(apple_script.encode('utf-8'))
 
@@ -34,14 +37,41 @@ def computer_action(apple_script):
 
     return stdout
 
-def chrome_action(javascript):
+@tool
+def chrome_javascript_action(javascript):
+    """
+    Use this when you want to execute a command in Chrome. The command should be Javascript.
+
+    You can also use the javascript commands to learn more about the page you're on.
+
+    Here are some helpful Javascript commands:
+
+    Command: Get the clickable elements on the page
+    Javascript: Array.from(document.querySelectorAll('a, button, input[type="submit"], input[type="button"]'))
+
+    Command: Click the button with the text "Sign in"
+    Javascript: document.querySelector('button:contains("Sign in")').click()
+
+    Command: Enter the text "Hello" into the input with the placeholder "Search"
+    Javascript: document.querySelector('input[placeholder="Search"]').value = "Hello"
+
+    The Javascript must be valid including quotes and semicolons.
+
+    Write the Javascript for the Command:
+    """
+    print("Running Javascript: ", javascript)
+
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     script = f'''
     tell application "Google Chrome"
-        execute javascript "{javascript}" in active tab of window 1
+        activate
+        tell active tab of front window
+            execute javascript "{javascript}"
+        end tell
     end tell
     '''
+
     stdout, stderr = p.communicate(script.encode('utf-8'))
 
     if p.returncode != 0:
