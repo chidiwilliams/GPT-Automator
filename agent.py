@@ -5,15 +5,16 @@ from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 
 from commands import computer_action
+from tools import make_computer_action_tool
 
 load_dotenv()
 
 llm = OpenAI(temperature=0)
 
-tools = load_tools([], llm=llm)
-
-tools.append(computer_action)
+tools = [
+    computer_action
+]
 
 agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
 
-agent.run("What is 5 times 5?")
+agent.run("What is 5 x 5?")

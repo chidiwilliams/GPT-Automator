@@ -18,14 +18,18 @@ def computer_action(apple_script):
 
     Command: Search for a table nearby
     AppleScript: tell application "Google Chrome"
-    activate
-    open location "https://www.google.com/search?q=Table+nearby"
+        activate
+        open location "https://www.google.com/search?q=Table+nearby"
     end tell
 
     The AppleScript should be valid and when appropriate use keyboard shortcuts.
 
+    If you need to do a calculation, use the calculator app.
+
     Write the AppleScript for the Command:
+    Command: 
     """
+
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate(apple_script.encode('utf-8'))
 
@@ -34,11 +38,26 @@ def computer_action(apple_script):
 
     return stdout
 
+@tool
 def chrome_action(javascript):
+    """
+    Use this when you want to execute a command on Chrome. The command should be in Javascript.
+
+    Here are some examples of good Javascript commands:
+
+    Command: Get the links on the page
+    document.querySelectorAll('a').forEach(a => console.log(a.href))
+
+    Command: Get the buttons on the page
+    document.querySelectorAll('button').forEach(a => console.log(a.innerText))
+
+    Write the Javascript for the command:
+    """
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     script = f'''
     tell application "Google Chrome"
+        activate
         execute javascript "{javascript}" in active tab of window 1
     end tell
     '''

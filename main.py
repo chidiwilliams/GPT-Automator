@@ -31,11 +31,13 @@ def main(command):
 
     Command: Search for a table nearby
     AppleScript: tell application "Google Chrome"
-    activate
-    open location "https://www.google.com/search?q=Table+nearby"
+        activate
+        open location "https://www.google.com/search?q=Table+nearby"
     end tell
 
     The AppleScript should be valid and when appropriate use keyboard shortcuts.
+    
+    Always call activate on the application you want to use.
 
     Write the AppleScript for the Command: {command}?
     """
