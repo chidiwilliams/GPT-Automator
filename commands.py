@@ -54,7 +54,7 @@ def chrome_click_on_link(link):
     """
     Use this when you want to click on a link on the page. 
     
-    The link should be a string.
+    The link should be a url.
 
     Make sure to choose the most relevant link
 
