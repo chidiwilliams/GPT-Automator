@@ -33,13 +33,7 @@ def computer_applescript_action(apple_script):
     """
     print("Running\n", apple_script)
 
-    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = p.communicate(apple_script.encode('utf-8'))
-
-    if p.returncode != 0:
-        raise Exception(stderr)
-
-    return stdout
+    return run_applescript(apple_script)
 
 @tool
 def chrome_javascript_action(javascript):
@@ -59,24 +53,8 @@ def chrome_javascript_action(javascript):
 
     Write the Javascript for the command:
     """
-    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    javascript = javascript.replace('"', '\\"')
-
-    if javascript.startswith('open '):
-        return "Invalid command, not javascript"
-
-    script = f'''
-    tell application "Google Chrome"
-        tell active tab of front window
-            execute javascript "{javascript}"
-        end tell
-    end tell
-    '''
-    stdout, stderr = p.communicate(script.encode('utf-8'))
-
-    if p.returncode != 0:
-        raise Exception(stderr)
+    stdout = run_javascript(javascript)
 
     return f"""
     Current URL: {run_javascript('window.location.href')}
@@ -91,23 +69,15 @@ def chrome_open_url(url):
     
     The URL should be a string. For example: https://gmail.com
     """
-    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
     script = f'''
     tell application "Google Chrome"
         open location "{url}"
     end tell
     '''
-    stdout, stderr = p.communicate(script.encode('utf-8'))
 
-    if p.returncode != 0:
-        raise Exception(stderr)
-
-    return stdout
+    return run_applescript(script)
 
 def run_javascript(javascript):
-    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
     javascript = javascript.replace('"', '\\"')
 
     if javascript.startswith('open '):
@@ -120,12 +90,18 @@ def run_javascript(javascript):
         end tell
     end tell
     '''
-    stdout, stderr = p.communicate(script.encode('utf-8'))
+    
+    return run_applescript(script)
+
+def run_applescript(applescript):
+    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    stdout, stderr = p.communicate(applescript.encode('utf-8'))
 
     if p.returncode != 0:
         raise Exception(stderr)
 
     return stdout
 
-if __name__ == '__main__':
-    chrome_open_url('https://gmail.com')
+def say_text(text):
+    run_applescript(f'say {text}')
