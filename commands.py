@@ -85,5 +85,19 @@ def chrome_open_url(url):
 
     return stdout
 
+def say_text(text):
+    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    script = f'''
+    say "{text}"
+    '''
+    stdout, stderr = p.communicate(script.encode('utf-8'))
+
+    if p.returncode != 0:
+        raise Exception(stderr)
+
+    return stdout
+
+
 if __name__ == '__main__':
     chrome_open_url('https://gmail.com')

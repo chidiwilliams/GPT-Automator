@@ -6,7 +6,7 @@ from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 
-from commands import computer_action
+from commands import computer_action, say_text
 from tools import make_computer_action_tool
 
 # load environment variables
@@ -21,9 +21,12 @@ def main(command):
 
     agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
 
-    result = agent.run("What is 5 x 5?")
+    result = agent.run(command)
 
-    print("Result", result)
+    if result:
+        say_text(f'The result is {result}')
+    else:
+        say_text(f'Finished doing {command}')
 
 if __name__ == "__main__":
     command = sys.argv[1]
