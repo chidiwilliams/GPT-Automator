@@ -9,6 +9,12 @@ def computer_applescript_action(apple_script):
 
     Always start with starting the app and activating it.
 
+    If it's a calculation, use the calculator app.
+
+    Use delay 0.5 between keystrokes.
+
+    When possible click buttons instead of typing.
+
     Here are some examples of good AppleScript commands:
 
     Command: Create a new page in Notion
@@ -21,12 +27,11 @@ def computer_applescript_action(apple_script):
     Command: Search for a table nearby
     AppleScript: tell application "Google Chrome"
         activate
+        delay 0.5
         open location "https://www.google.com/search?q=Table+nearby"
     end tell
 
-    The AppleScript should be valid and when appropriate use keyboard shortcuts.
-
-    If you need to do a calculation, use the calculator app.
+    The AppleScript should be valid including quotations.
 
     Write the AppleScript for the Command:
     Command: 
@@ -104,4 +109,4 @@ def run_applescript(applescript):
     return stdout
 
 def say_text(text):
-    run_applescript(f'say {text}')
+    run_applescript(f'say "{text}"')
