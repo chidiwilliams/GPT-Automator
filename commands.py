@@ -31,6 +31,7 @@ def computer_applescript_action(apple_script):
     Write the AppleScript for the Command:
     Command: 
     """
+    print("Running\n", apple_script)
 
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate(apple_script.encode('utf-8'))
@@ -43,24 +44,33 @@ def computer_applescript_action(apple_script):
 @tool
 def chrome_javascript_action(javascript):
     """
-    Use this when you want to execute a javascript command on Chrome. The command should be in Javascript.
+    Use this when you want to execute a javascript command on Chrome either to get data or trigger an action. The command should be in Javascript.
 
     Here are some examples of good Javascript commands:
 
     Command: Get the links on the page
-    document.querySelectorAll('a').forEach(a => console.log(a.href))
+    document.querySelectorAll('a')
 
     Command: Get the buttons on the page
-    document.querySelectorAll('button').forEach(a => console.log(a.innerText))
+    document.querySelectorAll('button')
+
+    Command: Click the first button on the page
+    document.querySelectorAll('button')[0].click()
 
     Write the Javascript for the command:
     """
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    javascript = javascript.replace('"', '\\"')
+
+    if javascript.startswith('open '):
+        return "Invalid command, not javascript"
+
     script = f'''
     tell application "Google Chrome"
-        activate
-        execute javascript "{javascript}" in active tab of window 1
+        tell active tab of front window
+            execute javascript "{javascript}"
+        end tell
     end tell
     '''
     stdout, stderr = p.communicate(script.encode('utf-8'))
@@ -68,7 +78,11 @@ def chrome_javascript_action(javascript):
     if p.returncode != 0:
         raise Exception(stderr)
 
-    return stdout
+    return f"""
+    Current URL: {run_javascript('window.location.href')}
+
+    Result: {stdout}
+    """
 
 @tool
 def chrome_open_url(url):
@@ -82,6 +96,28 @@ def chrome_open_url(url):
     script = f'''
     tell application "Google Chrome"
         open location "{url}"
+    end tell
+    '''
+    stdout, stderr = p.communicate(script.encode('utf-8'))
+
+    if p.returncode != 0:
+        raise Exception(stderr)
+
+    return stdout
+
+def run_javascript(javascript):
+    p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    javascript = javascript.replace('"', '\\"')
+
+    if javascript.startswith('open '):
+        return "Invalid command, not javascript"
+
+    script = f'''
+    tell application "Google Chrome"
+        tell active tab of front window
+            execute javascript "{javascript}"
+        end tell
     end tell
     '''
     stdout, stderr = p.communicate(script.encode('utf-8'))

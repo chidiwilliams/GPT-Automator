@@ -7,7 +7,6 @@ from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 
 from commands import computer_action
-from tools import make_computer_action_tool
 
 # load environment variables
 load_dotenv()
