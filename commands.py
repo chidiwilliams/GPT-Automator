@@ -3,7 +3,7 @@ import subprocess
 from langchain.agents import tool
 
 @tool
-def computer_action(apple_script):
+def computer_applescript_action(apple_script):
     """
     Use this when you want to execute a command on the computer. The command should be in AppleScript.
 
@@ -41,9 +41,9 @@ def computer_action(apple_script):
     return stdout
 
 @tool
-def chrome_action(javascript):
+def chrome_javascript_action(javascript):
     """
-    Use this when you want to execute a command on Chrome. The command should be in Javascript.
+    Use this when you want to execute a javascript command on Chrome. The command should be in Javascript.
 
     Here are some examples of good Javascript commands:
 
@@ -70,7 +70,13 @@ def chrome_action(javascript):
 
     return stdout
 
+@tool
 def chrome_open_url(url):
+    """
+    Use this tool to open a URL in Chrome. It is recommended to use this tool before doing any other actions on Chrome.
+    
+    The URL should be a string. For example: https://gmail.com
+    """
     p = subprocess.Popen(['osascript', '-'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     script = f'''
