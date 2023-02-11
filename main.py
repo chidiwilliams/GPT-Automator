@@ -1,52 +1,32 @@
-# import load_dotenv
 import sys
 
 from dotenv import load_dotenv
 
-from langchain import PromptTemplate
 from langchain.agents import load_tools
 from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 
-from commands import action
+from commands import computer_action, say_text
+from tools import make_computer_action_tool
 
 # load environment variables
 load_dotenv()
 
 def main(command):
-    # First, let's load the language model we're going to use to control the agent.
-    llm = OpenAI(temperature=0.9)
+    llm = OpenAI(temperature=0)
 
-    prompt = f"""
-    I want you to generate the AppleScript to execute a command.
+    tools = [
+        computer_action
+    ]
 
-    Here are some examples of good AppleScript commands:
+    agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbose=True)
 
-    Command: Create a new page in Notion
-    AppleScript: tell application "Notion"
-        activate
-        delay 0.5
-        tell application "System Events" to keystroke "n" using {{command down}}
-    end tell
+    result = agent.run(command)
 
-    Command: Search for a table nearby
-    AppleScript: tell application "Google Chrome"
-    activate
-    open location "https://www.google.com/search?q=Table+nearby"
-    end tell
-
-    The AppleScript should be valid and when appropriate use keyboard shortcuts.
-
-    Write the AppleScript for the Command: {command}?
-    """
-
-    applescript = llm(prompt)
-
-    print("Prompt: ", applescript)
-
-    applescript = applescript.replace("AppleScript: ", "")
-
-    action(applescript)
+    if result:
+        say_text(f'The result is {result}')
+    else:
+        say_text(f'Finished doing {command}')
 
 if __name__ == "__main__":
     command = sys.argv[1]
