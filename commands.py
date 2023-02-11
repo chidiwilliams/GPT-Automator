@@ -41,31 +41,62 @@ def computer_applescript_action(apple_script):
     return run_applescript(apple_script)
 
 @tool
-def chrome_javascript_action(javascript):
+def chrome_get_the_links_on_the_page(input):
     """
-    Use this when you want to execute a javascript command on Chrome either to get data or trigger an action. The command should be in Javascript.
+    Use this when you want to get the links on the current page.
 
-    Here are some examples of good Javascript commands:
+    You should use this before clicking on anything
+    """
+    return run_javascript('Array.from(document.querySelectorAll("a")).map(x => x.href)')[:5000]
 
-    Command: Get the links on the page
-    document.querySelectorAll('a')
+@tool
+def chrome_click_on_link(link):
+    """
+    Use this when you want to click on a link on the page. 
+    
+    The link should be a string.
 
-    Command: Get the buttons on the page
-    document.querySelectorAll('button')
+    Make sure to choose the most relevant link
 
-    Command: Click the first button on the page
-    document.querySelectorAll('button')[0].click()
+    The link should be descriptive 
+    """
+    return run_javascript(f'window.location.href = "{link}"')[:5000]
 
-    Write the Javascript for the command:
+@tool
+def chrome_read_the_page(input):
+    """
+    Use this when you want to read the page.
     """
 
-    stdout = run_javascript(javascript)
+    return run_javascript('document.body.innerText')[:5000]
 
-    return f"""
-    Current URL: {run_javascript('window.location.href')}
 
-    Result: {stdout}
-    """
+# @tool
+# def chrome_javascript_action(javascript):
+#     """
+#     Use this when you want to execute a javascript command on Chrome either to get data or trigger an action. The command should be in Javascript.
+
+#     Here are some examples of good Javascript commands:
+
+#     Command: Get the links on the page
+#     document.querySelectorAll('a')
+
+#     Command: Get the buttons on the page
+#     document.querySelectorAll('button')
+
+#     Command: Click the first button on the page
+#     document.querySelectorAll('button')[0].click()
+
+#     Write the Javascript for the command:
+#     """
+
+#     stdout = run_javascript(javascript)
+
+#     return f"""
+#     Current URL: {run_javascript('window.location.href')}
+
+#     Result: {stdout}
+#     """
 
 @tool
 def chrome_open_url(url):
