@@ -1,0 +1,13 @@
+Command: Create a new page in Notion
+tell application "Notion"
+    activate
+    delay 0.5
+    tell application "System Events" to keystroke "n" using {command down}
+end tell
+
+Command: Search for a table nearby
+tell application "Google Chrome"
+  activate
+  open location "https://www.google.com/search?q=Table+nearby"
+end tell
+
