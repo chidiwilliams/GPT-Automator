@@ -21,5 +21,12 @@ agent = initialize_agent(tools, llm, agent="zero-shot-react-description", verbos
 
 #agent.run("Search for a table nearby")
 #agent.run("Open outlook, wait a second and create a new email")
-agent.run("Create a new email to tim_beans@hotmail.com in Chrome")
+
+
+# on my (Adam's) mac this doesnt have permissions in Accessibility
 #agent.run("go to bbc.com and, once there, execute the javascript to print 'haha' in chrome")
+
+
+# this is cool: it releases it needs to run get_url_compose_gmail() and then pipe the result to chrome_open_url
+agent.run("Create a new email to tim_beans@hotmail.com in Chrome")
+
