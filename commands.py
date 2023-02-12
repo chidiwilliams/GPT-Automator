@@ -47,20 +47,16 @@ def chrome_get_the_links_on_the_page(input):
 
     You should use this before clicking on anything
     """
-    return run_javascript('Array.from(document.querySelectorAll("a")).map(x => x.href)')[:5000]
+    return run_javascript('Array.from(document.querySelectorAll("a")).map(x => x.href)')[:3000]
 
 @tool
 def chrome_click_on_link(link):
     """
-    Use this when you want to click on a link on the page. 
+    Use this when you want to go to a link. 
     
-    The link should be a url.
-
-    Make sure to choose the most relevant link
-
-    The link should be descriptive 
+    The link should be a url from a previous observation
     """
-    return run_javascript(f'window.location.href = "{link}"')[:5000]
+    return run_javascript(f'window.location.href = "{link}"')[:3000]
 
 @tool
 def chrome_read_the_page(input):
@@ -68,7 +64,7 @@ def chrome_read_the_page(input):
     Use this when you want to read the page.
     """
 
-    return run_javascript('document.body.innerText')[:5000]
+    return run_javascript('document.body.innerText')[:3000]
 
 
 # @tool
