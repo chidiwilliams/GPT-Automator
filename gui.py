@@ -76,9 +76,12 @@ class MainWindow(QMainWindow):
         else:
             self.transcription_label.setText(f'"{text.strip()}"')
 
-            # Run command execution
-            main.main(result["text"])
-            pass
+            try:
+                # Run command execution
+                main.main(result["text"])
+            except Exception as e:
+                print(f'Error executing command: {e}')
+                self.transcription_label.setText(f'An error occurred: {str(e)}')
 
         self.record_button.setDisabled(False)
 
