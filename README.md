@@ -7,6 +7,10 @@ Your voice-controlled assistant. GPT Automator lets you perform tasks on your co
 Made by [Luke Harries](https://harries.co/) and [Chidi Williams](https://chidiwilliams.com/) at
 the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/events/gTSwA8RoGidjpLnf6/london-ea-hackathon).
 
+## Demo
+
+[![Demo](./demo.png)](https://www.loom.com/share/9a1bda3d62d8440e9193a79ff10dd291)
+
 ## Instructions
 
 1. Install the requirements from the `requirements.txt` or `pyproject.toml` files.
@@ -24,9 +28,9 @@ and then executing the resulting script.
 
 ## Example prompts
 
-* Find the result of a calculation. Prompt: "What is 2 + 2?"
-* Find restaurants nearby. Prompt: "Find restaurants near me"
-* Play a game of chess. Prompt: "Play a game of chess"
+* Find the result of a calculation. Prompt: "What is 2 + 2?" -> It will write AppleScript to open up a calculator and type in 5 * 5.
+* Find restaurants nearby. Prompt: "Find restaurants near me" -> It will open up Google search, read the text on the page, and say the best restaurants.
+* Play a game of chess. Prompt: "Play a game of chess" -> It will open up Chess.com and start clicking around.
 
 ## Disclaimer
 
