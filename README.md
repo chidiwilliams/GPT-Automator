@@ -1,5 +1,5 @@
 # GPT Automator
-cc
+
 ![App](assets/app.png)
 
 Your voice-controlled assistant. GPT Automator lets you perform tasks on your computer using your voice.
@@ -11,7 +11,8 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
 
 1. Install the requirements from the `requirements.txt` or `pyproject.toml` files.
 2. Create a `.env` file from the `.env.example` file and fill in the OpenAI API key.
-2. Run `python gui.py` to run the GUI and click 'Record' to say your prompt. Alternatively, run `python main.py [prompt]`
+2. Run `python gui.py` to run the GUI and click 'Record' to say your prompt. Alternatively,
+   run `python main.py [prompt]`
    to run the CLI.
 
 ## How it works
