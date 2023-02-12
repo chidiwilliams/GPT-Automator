@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 from langchain.agents import tool
 
@@ -133,7 +134,10 @@ def run_applescript(applescript):
     if p.returncode != 0:
         raise Exception(stderr)
 
-    return stdout
+    decoded_text = stdout.decode("utf-8")
+
+    return decoded_text
+
 
 def say_text(text):
     run_applescript(f'say "{text}"')
