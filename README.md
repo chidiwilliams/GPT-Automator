@@ -8,13 +8,12 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
 ## Instructions
 
 1. Install the requirements from the `requirements.txt` or `pyproject.toml` files.
-2. Run `python gui.py` to run the GUI. Click 'Record' to say your prompt. Alternatively, run `python main.py [prompt]`
+2. Run `python gui.py` to run the GUI and click 'Record' to say your prompt. Alternatively, run `python main.py [prompt]`
    to run the CLI.
-3. Accept the permissions prompts for microphone input and executing system events.
 
 ## How it works
 
-GPT Automator converts your audio prompt to text using OpenAI's Whisper. Then it executes a sequence
+GPT Automator converts your audio input to text using OpenAI's Whisper. Then, it executes a sequence
 of [LangChain](https://github.com/hwchase17/langchain) actions, generating AppleScript (for desktop automation) and
 JavaScript (for browser automation) commands from your prompt using OpenAI's GPT-3 ("text-davinci-003"),
 and then executing the resulting script.
