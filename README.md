@@ -21,8 +21,7 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
 
 ## How it works
 
-GPT Automator converts your audio input to text using OpenAI's Whisper. Then, it executes a sequence
-of [LangChain](https://github.com/hwchase17/langchain) actions, generating AppleScript (for desktop automation) and
+GPT Automator converts your audio input to text using OpenAI's Whisper. Then, it uses a [LangChain](https://github.com/hwchase17/langchain) Agent to choose a set of actions, including generating AppleScript (for desktop automation) and
 JavaScript (for browser automation) commands from your prompt using OpenAI's GPT-3 ("text-davinci-003"),
 and then executing the resulting script.
 
