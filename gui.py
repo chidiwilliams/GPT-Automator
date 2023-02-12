@@ -1,77 +1,136 @@
+import os
 import sys
 from threading import Thread
+from typing import Optional
 
-from PyQt6.QtCore import (QObject, Qt, QThread,
-                          QTimer, QUrl, pyqtSignal, QModelIndex, QSize, QPoint,
-                          QUrlQuery, QMetaObject, QEvent, QLocale)
-from PyQt6.QtGui import (QAction, QCloseEvent, QDesktopServices, QIcon,
-                         QKeySequence, QPixmap, QTextCursor, QValidator, QKeyEvent, QPainter, QColor)
-from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
-from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog,
-                             QDialogButtonBox, QFileDialog, QLabel, QLineEdit,
-                             QMainWindow, QMessageBox, QPlainTextEdit,
-                             QProgressDialog, QPushButton, QVBoxLayout, QHBoxLayout, QMenu,
-                             QWidget, QGroupBox, QToolBar, QTableWidget, QMenuBar, QFormLayout, QTableWidgetItem,
-                             QHeaderView, QAbstractItemView, QListWidget, QListWidgetItem, QToolButton, QSizePolicy)
-import sounddevice
 import numpy as np
+import sounddevice
 import whisper
+from PyQt6.QtCore import (Qt)
+from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor
+from PyQt6.QtWidgets import (QApplication, QMainWindow, QPushButton, QWidget, QSizePolicy,
+                             QVBoxLayout, QLabel)
 
 import main
-import transcriber
-from transcriber import WhisperCpp
+
+
+def get_asset_path(path: str):
+    return os.path.join(os.path.dirname(__file__), path)
+
+
+RECORD_ICON_PATH = get_asset_path('assets/mic.svg')
+STOP_ICON_PATH = get_asset_path('assets/stop.svg')
 
 
 class MainWindow(QMainWindow):
     is_recording = False
     record_button: QPushButton
-    queue = np.ndarray([], dtype=np.float32)
+    ICON_LIGHT_THEME_BACKGROUND = '#333'
+    ICON_DARK_THEME_BACKGROUND = '#DDD'
+    samples_buffer: np.ndarray
+    recording_thread: Optional[Thread] = None
+    transcription_thread: Optional[Thread] = None
 
     def __init__(self):
         super().__init__(flags=Qt.WindowType.Window)
 
-        self.setMinimumSize(450, 400)
+        self.samples_buffer = np.ndarray([], dtype=np.float32)
+
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+
+        self.setFixedSize(275, 90)
+        self.setWindowTitle("GPT Automator")
 
         widget = QWidget(parent=self)
 
-        self.record_button = QPushButton("Record", parent=self)
-        self.record_button.clicked.connect(self.on_button_clicked)
+        layout = QVBoxLayout()
 
+        self.record_icon = self.load_icon(RECORD_ICON_PATH)
+        self.stop_icon = self.load_icon(STOP_ICON_PATH)
+
+        self.record_button = QPushButton(self.load_icon(RECORD_ICON_PATH), "Record", parent=self)
+        self.record_button.clicked.connect(self.on_button_clicked)
+        self.record_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        window_color = self.palette().window().color()
+        background_color = window_color.lighter(150) if self.is_dark_theme() else window_color.darker(150)
+        self.record_button.setStyleSheet(
+            "QPushButton { border-radius: 8px; background-color: %s; }" % background_color.name())
+
+        self.transcription_label = QLabel("Click 'Record' to begin", parent=self)
+        self.transcription_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        layout.addWidget(self.record_button)
+        layout.addWidget(self.transcription_label)
+        widget.setLayout(layout)
         self.setCentralWidget(widget)
 
-    def run_whisper(self):
-        # model = WhisperCpp(model="/Users/chidiwilliams/Library/Caches/Buzz/ggml-model-whisper-base.bin")
-        # model = WhisperCpp(model="/Users/chidiwilliams/Library/Caches/Buzz/ggml-base.en.bin")
+    def transcribe_recording(self):
         model = whisper.load_model("base")
-        result = model.transcribe(audio=self.queue, language="en", task="transcribe")
-        # result = model.transcribe(audio=self.queue, params=transcriber.whisper_cpp_params(language="en", word_level_timings=False))
-        print(result["text"])
-        main.main(result["text"])
+        result = model.transcribe(audio=self.samples_buffer, language="en", task="transcribe")
+
+        text = result["text"]
+        print(f'Transcribed text: {text}')
+
+        if text is None:
+            self.transcription_label.setText('No text found. Please try again.')
+        else:
+            self.transcription_label.setText(f'"{text.strip()}"')
+
+            # Run command execution
+            main.main(result["text"])
+            pass
+
+        self.record_button.setDisabled(False)
 
     def start_recording(self):
-        with sounddevice.InputStream(channels=1, samplerate=16000, callback=self.callback, dtype="float32"):
+        with sounddevice.InputStream(channels=1, callback=self.callback, dtype="float32"):
             while self.is_recording:
                 pass
 
     def callback(self, in_data, frames, time, status):
         chunk: np.ndarray = in_data.ravel()
-        self.queue = np.append(self.queue, chunk)
+        self.samples_buffer = np.append(self.samples_buffer, chunk)
 
     def on_button_clicked(self):
         if self.is_recording:
             self.record_button.setText("Record")
-            sounddevice.stop()
+            self.record_button.setIcon(self.record_icon)
             self.is_recording = False
 
-            self.thread = Thread(target=self.run_whisper)
-            self.thread.start()
-        else:
-            self.thread = Thread(target=self.start_recording)
-            self.thread.start()
+            self.transcription_label.setText('Transcribing...')
+            self.record_button.setDisabled(True)
 
-            # self.stream = sounddevice.InputStream(channels=1, samplerate=16000, callback=self.callback)
+            self.transcription_thread = Thread(target=self.transcribe_recording)
+            self.transcription_thread.start()
+        else:
+            # Reset samples buffer
+            self.samples_buffer = np.ndarray([], dtype=np.float32)
+
+            self.recording_thread = Thread(target=self.start_recording)
+            self.recording_thread.start()
+
+            self.transcription_label.setText('Listening...')
+
             self.record_button.setText("Stop")
+            self.record_button.setIcon(self.stop_icon)
             self.is_recording = True
+
+    def is_dark_theme(self):
+        return self.palette().window().color().black() > 127
+
+    def load_icon(self, file_path: str):
+        background = self.ICON_DARK_THEME_BACKGROUND if self.is_dark_theme() else self.ICON_LIGHT_THEME_BACKGROUND
+        return self.load_icon_with_color(file_path, background)
+
+    @staticmethod
+    def load_icon_with_color(file_path: str, color: str):
+        """Adapted from https://stackoverflow.com/questions/15123544/change-the-color-of-an-svg-in-qt"""
+        pixmap = QPixmap(file_path)
+        painter = QPainter(pixmap)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)
+        painter.fillRect(pixmap.rect(), QColor(color))
+        painter.end()
+        return QIcon(pixmap)
 
 
 class Application(QApplication):

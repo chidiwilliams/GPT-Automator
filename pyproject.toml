@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fizz"
+version = "0.1.0"
+description = ""
+authors = ["Chidi Williams <williamschidi1@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sounddevice = "^0.4.5"
+openai-whisper = { git = "https://github.com/openai/whisper.git" }
+PyQt6 = "^6.4.0"
+openai = "^0.26.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
