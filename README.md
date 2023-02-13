@@ -30,7 +30,7 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
 
 ## Demo
 
-[![Demo](./demo.png)](https://www.loom.com/share/9a1bda3d62d8440e9193a79ff10dd291)
+[![GPT Automator demo](https://cdn.loom.com/sessions/thumbnails/7bfa82c604f3412fbbb04191ce2ae12f-00001.gif)](https://www.loom.com/share/7bfa82c604f3412fbbb04191ce2ae12f "GPT Automator demo")
 
 ## Instructions
 
