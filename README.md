@@ -9,7 +9,7 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
 
 ## Requirements
 
-* `ffmpeg`
+* [FFmpeg](https://ffmpeg.org/)
 
    ```shell
    # on Ubuntu or Debian
