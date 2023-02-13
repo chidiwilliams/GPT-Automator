@@ -50,6 +50,12 @@ and then executing the resulting script.
 * Find restaurants nearby. Prompt: "Find restaurants near me" -> It will open up Google search, read the text on the page, and say the best restaurants.
 * Play a game of chess. Prompt: "Play a game of chess" -> It will open up Chess.com and start clicking around.
 
+## Learn more
+
+Checkout our blog posts for more information:
+- [Chidi's blog post](https://chidiwilliams.com/post/gpt-automator/)
+- [Luke's blog post](https://harries.co/ea-hackathon-gpt-automator-and-langchain/)
+
 ## Disclaimer
 
 This project executes code generated from natural language and may be susceptible
