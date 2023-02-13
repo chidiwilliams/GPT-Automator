@@ -2,7 +2,7 @@
 
 ![App](assets/app.png)
 
-Your voice-controlled assistant. GPT Automator lets you perform tasks on your computer using your voice. For example, opening applications, looking up restaurants, and synthesizing information.
+Your voice-controlled Mac assistant. GPT Automator lets you perform tasks on your Mac using your voice. For example, opening applications, looking up restaurants, and synthesizing information.
 
 Made by [Luke Harries](https://harries.co/) and [Chidi Williams](https://chidiwilliams.com/) at
 the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/events/gTSwA8RoGidjpLnf6/london-ea-hackathon).
