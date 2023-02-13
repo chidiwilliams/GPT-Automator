@@ -7,6 +7,8 @@ Your voice-controlled assistant. GPT Automator lets you perform tasks on your co
 Made by [Luke Harries](https://harries.co/) and [Chidi Williams](https://chidiwilliams.com/) at
 the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/events/gTSwA8RoGidjpLnf6/london-ea-hackathon).
 
+[![GPT Automator demo](https://cdn.loom.com/sessions/thumbnails/7bfa82c604f3412fbbb04191ce2ae12f-00001.gif)](https://www.loom.com/share/7bfa82c604f3412fbbb04191ce2ae12f "GPT Automator demo")
+
 ## Requirements
 
 * [FFmpeg](https://ffmpeg.org/)
@@ -27,10 +29,6 @@ the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/eve
    # on Windows using Scoop (https://scoop.sh/)
    scoop install ffmpeg
    ```
-
-## Demo
-
-[![GPT Automator demo](https://cdn.loom.com/sessions/thumbnails/7bfa82c604f3412fbbb04191ce2ae12f-00001.gif)](https://www.loom.com/share/7bfa82c604f3412fbbb04191ce2ae12f "GPT Automator demo")
 
 ## Instructions
 
