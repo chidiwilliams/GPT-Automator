@@ -7,15 +7,36 @@ Your voice-controlled assistant. GPT Automator lets you perform tasks on your co
 Made by [Luke Harries](https://harries.co/) and [Chidi Williams](https://chidiwilliams.com/) at
 the [London EA Hackathon, February 2023](https://forum.effectivealtruism.org/events/gTSwA8RoGidjpLnf6/london-ea-hackathon).
 
+## Requirements
+
+* `ffmpeg`
+
+   ```shell
+   # on Ubuntu or Debian
+   sudo apt update && sudo apt install ffmpeg
+
+   # on Arch Linux
+   sudo pacman -S ffmpeg
+
+   # on MacOS using Homebrew (https://brew.sh/)
+   brew install ffmpeg
+
+   # on Windows using Chocolatey (https://chocolatey.org/)
+   choco install ffmpeg
+
+   # on Windows using Scoop (https://scoop.sh/)
+   scoop install ffmpeg
+   ```
+
 ## Demo
 
 [![Demo](./demo.png)](https://www.loom.com/share/9a1bda3d62d8440e9193a79ff10dd291)
 
 ## Instructions
 
-1. Install the requirements from the `requirements.txt` or `pyproject.toml` files.
+1. Install the dependencies from the `requirements.txt` or `pyproject.toml` files.
 2. Create a `.env` file from the `.env.example` file and fill in the OpenAI API key.
-2. Run `python gui.py` to run the GUI and click 'Record' to say your prompt. Alternatively,
+3. Run `python gui.py` to run the GUI and click 'Record' to say your prompt. Alternatively,
    run `python main.py [prompt]`
    to run the CLI.
 

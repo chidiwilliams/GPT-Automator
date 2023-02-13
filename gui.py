@@ -1,10 +1,14 @@
 import os
 import sys
+import uuid
 from threading import Thread
 from typing import Optional
 
 import numpy as np
 import sounddevice
+import soundfile
+import queue
+import tempfile
 import whisper
 from PyQt6.QtCore import (Qt)
 from PyQt6.QtGui import QIcon, QPixmap, QPainter, QColor
@@ -27,9 +31,10 @@ class MainWindow(QMainWindow):
     record_button: QPushButton
     ICON_LIGHT_THEME_BACKGROUND = '#333'
     ICON_DARK_THEME_BACKGROUND = '#DDD'
-    samples_buffer: np.ndarray
     recording_thread: Optional[Thread] = None
     transcription_thread: Optional[Thread] = None
+    temp_file_path: Optional[str] = None
+    queue = queue.Queue()
 
     def __init__(self):
         super().__init__(flags=Qt.WindowType.Window)
@@ -66,7 +71,7 @@ class MainWindow(QMainWindow):
 
     def transcribe_recording(self):
         model = whisper.load_model("base")
-        result = model.transcribe(audio=self.samples_buffer, language="en", task="transcribe")
+        result = model.transcribe(audio=self.temp_file_path, language="en", task="transcribe")
 
         text = result["text"]
         print(f'Transcribed text: {text}')
@@ -86,13 +91,19 @@ class MainWindow(QMainWindow):
         self.record_button.setDisabled(False)
 
     def start_recording(self):
-        with sounddevice.InputStream(channels=1, callback=self.callback, dtype="float32"):
-            while self.is_recording:
-                pass
+        device = sounddevice.query_devices(kind='input')
+
+        self.temp_file_path = os.path.join(tempfile.gettempdir(), f'{uuid.uuid1()}.wav')
+        print(f'Temporary recording path: {self.temp_file_path}')
+
+        with soundfile.SoundFile(self.temp_file_path, mode='x', samplerate=int(device['default_samplerate']),
+                                 channels=1) as file:
+            with sounddevice.InputStream(channels=1, callback=self.callback, device=device['index'], dtype="float32"):
+                while self.is_recording:
+                    file.write(self.queue.get())
 
     def callback(self, in_data, frames, time, status):
-        chunk: np.ndarray = in_data.ravel()
-        self.samples_buffer = np.append(self.samples_buffer, chunk)
+        self.queue.put(in_data.copy())
 
     def on_button_clicked(self):
         if self.is_recording:
